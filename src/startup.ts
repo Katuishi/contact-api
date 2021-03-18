@@ -9,15 +9,15 @@ require("./database");
 
 const app = express();
 
-//middleware
-app.use(morgan("dev"));
+// middleware
+app.use(morgan("common"));
 app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//routes
+// routes
 app.use(userRoutes);
 app.use(contactRoutes);
 

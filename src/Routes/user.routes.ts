@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { login, signup } from "../Controllers/user.controller";
+import { login, signUp } from "../Controllers/user.controller";
 import passport from "passport";
 
+// eslint-disable-next-line new-cap
 const route = Router();
 
 route.post(
@@ -11,9 +12,7 @@ route.post(
   }),
   login
 );
-route.post(
-  "/signup",
-  signup
-);
+
+route.post("/signup", signUp);
 
 export default route;

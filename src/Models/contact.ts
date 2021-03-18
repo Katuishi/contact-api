@@ -1,31 +1,35 @@
-import { Schema, model } from "mongoose";
+import { Schema, model , Document} from "mongoose";
 
-const schema = new Schema({
-    name:{
-        type:String
-    },
-    surname:{
-        type:String
-    },
-    telephone1:{
-        type:String,
-        unique:true
-    },
-    telephone2:{
-        type:String,
-        unique:true
-        },
-    email:{
-        type:String
-    },
-    type:{
-        required:true,
-        enum:["movil","telephone","business"]
-    }
-})
+interface IContact extends Document{
+  name?:String;
+  surname?:String;
+  telephone?:String;
+  category?:String;
+}
 
-schema.pre("save",(next)=>{
-    schema
-})
+const contactSchema = new Schema({
+  name: {
+    type: String,
+  },
+  surname: {
+    type: String,
+  },
+  telephone: {
+    type: String,
+    unique: true,
+    trim:true
+  },
+  idUser:{
+    required:true,
+    type:String
+  },
+  category: {
+    required: true,
+    type:String,
+    enum: ["movil", "telephone", "business"],
+  },
+});
 
-export default model("contact",schema)
+
+
+export default model<IContact>("contact", contactSchema);

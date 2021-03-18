@@ -17,6 +17,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    trim:true,
   },
   password: {
     type: String,
@@ -27,10 +28,13 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    trim:true,
+    lowercase:true
   },
 });
 
 userSchema.pre<IUser>("save", async function (next) {
+
   const passwordHashed = await bcrypt.hash(this.password, 10);
   this._id = v4();
   this.password = passwordHashed;
@@ -41,7 +45,6 @@ userSchema.methods.isValidPassword = async function (
   password: String
 ): Promise<Boolean> {
   let compare = await bcrypt.compare(password, this.password);
-  console.log(compare)
   return compare;
 };
 
