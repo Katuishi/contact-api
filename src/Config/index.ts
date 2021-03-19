@@ -9,4 +9,4 @@ export const PORT: Number = Number.parseInt(`${process.env.PORT}`) || 3000;
 export const MONGO_USER: String = process.env.MONGO_USER || "";
 export const MONGO_PASS: String = process.env.MONGO_PASS || "";
 export const MONGO_DB: String = process.env.MONGO_DB || "";
-export const SECRET_PASS: String = process.env.SECRET_PASS || "secret word";
+export const SECRET_PASS: String = process.env.SECRET_PASS || "secret_word";

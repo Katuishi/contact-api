@@ -1,28 +1,28 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import User from "../Models/user";
 
 import { Strategy as JWTstrategy } from "passport-jwt";
 import { ExtractJwt as ExtractJWT } from "passport-jwt";
 import createToken from "./Tokenization";
 import { SECRET_PASS } from "../Config";
+import User from "../Models/user";
 
 
 passport.use(
   "login",
-  new LocalStrategy(async (username: String, password: String, done: any) => {
+  new LocalStrategy(async (username: string, password: string, done: any) => {
     try {
       const currentUser = await User.findOne({ username: username }).exec();
       if (!currentUser) {
         return done(null, "username or password is invalid");
       }
-
-      const validate = await currentUser.isValidPassword(password);
-
+      
+      const validate = User.comparePassword(password,currentUser.password);
+     
       if (!validate) {
         return done(null, false, "username or password is invalid");
       }
-      console.log(createToken(currentUser))
+     
       return done(null,{ token:createToken(currentUser)});
     } catch (error) {
       return done(null,false,"Error database");

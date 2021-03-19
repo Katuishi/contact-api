@@ -1,12 +1,18 @@
-import { model, Document, Schema, DocumentQuery } from "mongoose";
-import bcrypt from "bcrypt";
+import { model,Model, Document, Schema } from "mongoose";
 import { v4 } from "uuid";
+import encryptoKey, { comparePassword } from "../Helpers/indes";
 
 export interface IUser extends Document {
-  username?: String;
-  email?: String;
-  password?: String;
-  isValidPassword: (password: String) => Promise<Boolean>;
+  username: string;
+  email: string;
+  password: string;
+  comparePassword:(password:string,hash:string) => Promise<Boolean>;
+  
+}
+
+interface IUserDocument extends Model<IUser>{
+
+  comparePassword:(password:string,hash:string) => Promise<Boolean>;
 }
 
 const userSchema = new Schema({
@@ -17,7 +23,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    trim:true,
+    trim: true,
   },
   password: {
     type: String,
@@ -28,24 +34,21 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    trim:true,
-    lowercase:true
+    trim: true,
+    lowercase: true
   },
 });
 
 userSchema.pre<IUser>("save", async function (next) {
 
-  const passwordHashed = await bcrypt.hash(this.password, 10);
+  let hash: string = await encryptoKey(this.password);
   this._id = v4();
-  this.password = passwordHashed;
+  this.password = hash;
+
   next();
 });
+userSchema.statics.comparePassword = comparePassword
 
-userSchema.methods.isValidPassword = async function (
-  password: String
-): Promise<Boolean> {
-  let compare = await bcrypt.compare(password, this.password);
-  return compare;
-};
+const User = model<IUser,IUserDocument>("user", userSchema);
 
-export default model<IUser>("user", userSchema);
+export default User 
