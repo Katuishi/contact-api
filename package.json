@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "desploy":"docker build -t node-api .",
     "test": "jest --verbose",
     "build": "tsc",
     "lint":"tsc --noEmit && eslint '*/**/*.{js,ts}' --quiet --fix",
